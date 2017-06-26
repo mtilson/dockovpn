@@ -1,10 +1,13 @@
 # OpenVPN for Docker
 
+**GitHub repo** sourced from [jpetazzo/dockvpn](https://github.com/jpetazzo/dockvpn), for which corresponding **Docker Hub repo** [exists](https://hub.docker.com/r/jpetazzo/dockvpn/).
+
+
 Quick instructions:
 
 ```bash
-CID=$(docker run -d --privileged -p 1194:1194/udp -p 443:443/tcp jpetazzo/dockvpn)
-docker run -t -i -p 8080:8080 --volumes-from $CID jpetazzo/dockvpn serveconfig
+CID=$(docker run -d --privileged -p 1194:1194/udp -p 443:443/tcp mtilson/dockovpn)
+docker run -t -i -p 8080:8080 --volumes-from $CID mtilson/dockovpn serveconfig
 ```
 
 Now download the file located at the indicated URL. You will get a
@@ -35,7 +38,7 @@ use `docker start` to restart the service without touching the configuration.
 
 ## How does it work?
 
-When the `jpetazzo/dockvpn` image is started, it generates:
+When the `mtilson/dockovpn` image is started, it generates:
 
 - Diffie-Hellman parameters,
 - a private key,
@@ -49,7 +52,7 @@ on 443/tcp).
 The configuration is located in `/etc/openvpn`, and the Dockerfile
 declares that directory as a volume. It means that you can start another
 container with the `--volumes-from` flag, and access the configuration.
-Conveniently, `jpetazzo/dockvpn` comes with a script called `serveconfig`,
+Conveniently, `mtilson/dockovpn` comes with a script called `serveconfig`,
 which starts a pseudo HTTPS server on `8080/tcp`. The pseudo server
 does not even check the HTTP request; it just sends the HTTP status line,
 headers, and body right away.
