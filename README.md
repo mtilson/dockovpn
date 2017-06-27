@@ -6,8 +6,8 @@
 Quick instructions:
 
 ```bash
-CID=$(docker run -d --privileged -p 1194:1194/udp -p 443:443/tcp mtilson/dockovpn)
-docker run -t -i -p 8080:8080 --volumes-from $CID mtilson/dockovpn serveconfig
+CID=$(sudo docker run -d --privileged -p 1194:1194/udp -p 443:443/tcp mtilson/dockovpn)
+sudo docker run -t -i -p 8080:8080 --volumes-from $CID mtilson/dockovpn serveconfig
 ```
 
 Now download the file located at the indicated URL. You will get a
