@@ -6,7 +6,7 @@
 Quick instructions:
 
 ```bash
-CID=$(sudo docker run -d --privileged -p 1194:1194/udp -p 443:443/tcp mtilson/dockovpn)
+CID=$(sudo docker run -d --privileged -p 1194:1194/udp -p 4443:4443/tcp mtilson/dockovpn)
 sudo docker run -t -i -p 8080:8080 --volumes-from $CID mtilson/dockovpn serveconfig
 ```
 
@@ -47,7 +47,7 @@ When the `mtilson/dockovpn` image is started, it generates:
 - an OpenVPN client profile.
 
 Then, it starts two OpenVPN server processes (one on 1194/udp, another
-on 443/tcp).
+on 4443/tcp).
 
 The configuration is located in `/etc/openvpn`, and the Dockerfile
 declares that directory as a volume. It means that you can start another
