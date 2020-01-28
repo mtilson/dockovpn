@@ -1,9 +1,35 @@
-# OpenVPN for Docker
+# OpenVPN for Docker #
 
 **GitHub repo** sourced from [jpetazzo/dockvpn](https://github.com/jpetazzo/dockvpn), for which corresponding **Docker Hub repo** [exists](https://hub.docker.com/r/jpetazzo/dockvpn/).
 
+## Quick instructions ##
 
-Quick instructions:
+### Prepare UFW ###
+
+```bash
+echo "configure ufw rules"
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw default deny routed
+sudo ufw limit 22/tcp # make sure SSH is on the appropriate port
+sudo ufw allow 1194/udp
+sudo ufw allow 4443/tcp
+sudo ufw allow 12345/tcp
+
+echo "enable ufw"
+sudo ufw enable
+
+echo "enable ufw on restart"
+sudo tee /etc/ufw/ufw.conf << _EOF_
+ENABLED=yes
+LOGLEVEL=low
+_EOF_
+
+sudo chown root: /etc/ufw/ufw.conf
+sudo chmod 644 /etc/ufw/ufw.conf
+```
+
+### Run OpenVPN ###
 
 ```bash
 CID=$(sudo docker run -d --privileged -p 1194:1194/udp -p 4443:4443/tcp mtilson/dockovpn)
@@ -35,8 +61,7 @@ again, you will create a new service (with a new configuration) and
 you will have to re-download the configuration file. However, you can
 use `docker start` to restart the service without touching the configuration.
 
-
-## How does it work?
+## How does it work? ##
 
 When the `mtilson/dockovpn` image is started, it generates:
 
@@ -57,8 +82,7 @@ which starts a pseudo HTTPS server on `12345/tcp`. The pseudo server
 does not even check the HTTP request; it just sends the HTTP status line,
 headers, and body right away.
 
-
-## OpenVPN details
+## OpenVPN details ##
 
 We use `tun` mode, because it works on the widest range of devices.
 `tap` mode, for instance, does not work on Android, except if the device
@@ -78,8 +102,7 @@ and they might not answer to you. If that happens, use public DNS
 resolvers like those of Google (8.8.4.4 and 8.8.8.8) or OpenDNS
 (208.67.222.222 and 208.67.220.220).
 
-
-## Security discussion
+## Security discussion ##
 
 For simplicity, the client and the server use the same private key and
 certificate. This is certainly a terrible idea. If someone can get their
@@ -99,8 +122,7 @@ called. The command could even take the client CN as argument, and
 another `revoke` command could be used to revoke previously issued
 keys.
 
-
-## Verified to work with ...
+## Verified to work with ... ##
 
 People have successfully used this VPN server with clients such as:
 
@@ -109,8 +131,7 @@ People have successfully used this VPN server with clients such as:
 - Tunnelblick on OSX,
 - (some VPN client on Android but I can't remember which).
 
-
-## Other related/interesting projects
+## Other related/interesting projects ##
 
 - @besn0847/[alpinevpn](https://github.com/besn0847/alpinevpn), a smaller
   image based on the Alpine distribution
